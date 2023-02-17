@@ -1,0 +1,4 @@
+MongoDB connection URI for custom DB connection: mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
+Model contains business logic and db operations.
+View contains the frontend.
+Controller contains code that handles all requests to and from the application.
