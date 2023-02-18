@@ -16,7 +16,7 @@ function validateStates({
     callbackFunction(flag);
   } else {
 
-    valid[`${index}`] && valid[`${index}`][`${key}`] && delete valid[`${index}`][`${key}`];
+    valid[`${index}`] && valid[`${index}`][`${key}`] && delete valid[`${index}`][`${key}`];//check if error at current index already exists if yes then delete previously stored value
     if (valid?.[`${index}`] && Object.keys(valid?.[`${index}`])?.length === 0) {
       delete valid[`${index}`];
     }
@@ -24,3 +24,4 @@ function validateStates({
   }
 }
 export { validateStates };
+//valid state is storing errorenous fields

@@ -91,9 +91,8 @@ function PlaceOrder() {
     let flag = "";
     switch (key) {
       case "brand":
-        const temp = [...brand];
         setBrand(
-          temp.map((k: any, i: any) => {
+          brand.map((k: any, i: any) => {
             return i == index ? value : k;
           })
         );

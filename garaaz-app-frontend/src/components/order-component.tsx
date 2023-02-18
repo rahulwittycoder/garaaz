@@ -11,7 +11,21 @@ import {
 } from "@chakra-ui/react";
 import {useToast} from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-function OrderComponent(props: any) {
+
+interface dataObject{
+  brand:string;
+  transaction_type: string;
+  total_Orders: number;
+  total_Order_Value: number;
+  grossMarginPercentage: number;
+}
+interface OrderComponentProps{
+  deleteRowHandler?: (index:number)=>void;
+  element ?: any;
+  data?: dataObject;
+  setField?: (key: string,index:number,value:number | string,callbackFunction:any)=>void;
+}
+function OrderComponent(props: OrderComponentProps) {
   const toast = useToast();
 
   function showError(message:string){
@@ -48,16 +62,15 @@ function OrderComponent(props: any) {
             };
             //@ts-ignore
             const d = dt.toLocaleDateString("en-US", options);
-            console.log(d);
             return (
-              <Td key={props.element.index} textAlign="center">
+              <Td key={props.element.index+"td"} textAlign="center">
                 {d}
               </Td>
             );
           }
           if (key == "index") {
             return (
-              <Td key={props.element.index} textAlign="center">
+              <Td key={props.element.index+"index"} textAlign="center">
                 {props.element.index + 1}
               </Td>
             );
@@ -65,7 +78,7 @@ function OrderComponent(props: any) {
             return (
               <Td key={props.element.index + "db"} textAlign="center">
                 <Button
-                  onClick={() => props.deleteRowHandler(props.element.index)}
+                  onClick={() => props.deleteRowHandler && props.deleteRowHandler(props.element.index)}
                   leftIcon={<DeleteIcon />}
                   colorScheme="red"
                   size="sm"
@@ -77,7 +90,7 @@ function OrderComponent(props: any) {
             );
           } else {
             return (
-              <Td key={props.element.index} textAlign="center">
+              <Td key={props.element.index+[`${key}`]} textAlign="center">
                 {props.element[`${key}`]}
               </Td>
             );
@@ -93,7 +106,7 @@ function OrderComponent(props: any) {
             return (
               <Td key={props.element.index + "db"} textAlign="center">
                 <Button
-                  onClick={() => props.deleteRowHandler(props.element.index)}
+                  onClick={() => props.deleteRowHandler && props.deleteRowHandler(props.element.index)}
                   leftIcon={<DeleteIcon />}
                   colorScheme="red"
                   size="sm"
@@ -109,12 +122,12 @@ function OrderComponent(props: any) {
               return (
                 <Td key={props.element.index + "txn"}>
                   <Select
-                    isInvalid={!(props.data.transaction_type=="Facilitation" || props.data.transaction_type=="Trading")}
+                    isInvalid={!(props?.data?.transaction_type=="Facilitation" || props?.data?.transaction_type=="Trading")}
                     isRequired={true}
                     placeholder="Select option"
-                    value={props.data.transaction_type}
+                    value={props?.data?.transaction_type}
                     onChange={(e) =>
-                      props.setField(
+                      props.setField && props.setField(
                         "transaction_type",
                         props.element.index,
                         e.target.value,
@@ -132,14 +145,14 @@ function OrderComponent(props: any) {
               return (
                 <Td key={props.element.index + "brand"}>
                   <Input
-                    isInvalid={props.data.brand.trim==""}
+                    isInvalid={!props?.data?.brand.trim.length}
                     textAlign="center"
                     width="20vw"
                     variant="outline"
                     placeholder="Brand"
-                    value={props.data.brand}
+                    value={props?.data?.brand}
                     onChange={(e) =>
-                      props.setField(
+                      props.setField && props.setField(
                         "brand",
                         props.element.index,
                         e.target.value,
@@ -158,9 +171,9 @@ function OrderComponent(props: any) {
                     defaultValue={1}
                     min={1}
                     max={13}
-                    value={props.data.total_Orders}
+                    value={props?.data?.total_Orders}
                     onChange={(e) =>
-                      props.setField("total_Orders", props.element.index, e,showError)
+                      props.setField && props.setField("total_Orders", props.element.index, e,showError)
                     }
                   >
                     <NumberInputField />
@@ -180,9 +193,9 @@ function OrderComponent(props: any) {
                     defaultValue={0}
                     min={0}
                     max={12000}
-                    value={props.data.total_Order_Value}
+                    value={props?.data?.total_Order_Value}
                     onChange={(e) =>
-                      props.setField(
+                      props?.setField && props?.setField(
                         "total_Order_Value",
                         props.element.index,
                         e,
@@ -207,9 +220,9 @@ function OrderComponent(props: any) {
                     defaultValue={1}
                     min={1}
                     max={4}
-                    value={props.data.grossMarginPercentage}
+                    value={props?.data?.grossMarginPercentage}
                     onChange={(e) =>
-                      props.setField(
+                      props?.setField && props?.setField(
                         "grossMarginPercentage",
                         props.element.index,
                         e,

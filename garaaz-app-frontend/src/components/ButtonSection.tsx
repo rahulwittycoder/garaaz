@@ -1,6 +1,6 @@
 import { HStack, Button, useToast } from "@chakra-ui/react";
 import { AddIcon, CheckIcon } from "@chakra-ui/icons";
-function ButtonSection({ addRowHandler, submitHandler, props }: any) {
+function ButtonSection({ addRowHandler, submitHandler}: any) {
 
   const showToast = (isSuccess: boolean,source : "onSubmit" | "onAdd") => {
     if(source=="onSubmit")
