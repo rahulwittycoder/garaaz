@@ -8,7 +8,6 @@ import {
   Tbody,
   Tfoot,
   ChakraProvider,
-  useToast,
 } from "@chakra-ui/react";
 import OrderComponent from "../components/order-component";
 import axios from "axios";
