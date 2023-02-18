@@ -1,21 +1,20 @@
 import { Prop , Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-
+import { txnT } from "../dto/create-spare.dto";
 export type SpareDocument = Spare & Document;
 @Schema({timestamps: {
     createdAt: true,
     updatedAt: true,
   }})
 export class Spare{
-
     @Prop()
     date: Date;
 
     @Prop()
     brand: string;
 
-    @Prop()
-    transaction_type: string;
+    @Prop({enum:txnT})
+    transaction_type: txnT;
 
     @Prop()
     total_Orders: number;

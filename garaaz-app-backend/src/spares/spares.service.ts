@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { CreateSpareDto } from './dto/create-spare.dto';
 import { UpdateSpareDto } from './dto/update-spare.dto';
 import { Spare, SpareDocument } from './schema/spare';
-
 @Injectable()
 export class SparesService {
 

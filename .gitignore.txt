@@ -1,0 +1,60 @@
+# compiled output
+/dist
+garaaz-app-backend/node_modules
+
+# Logs
+logs
+garaaz-app-backend/*.log
+garaaz-app-backend/npm-debug.log*
+garaaz-app-backend/pnpm-debug.log*
+garaaz-app-backend/yarn-debug.log*
+garaaz-app-backend/yarn-error.log*
+garaaz-app-backend/lerna-debug.log*
+
+# OS
+garaaz-app-backend/.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+garaaz-app-backend//.idea
+garaaz-app-backend/.project
+garaaz-app-backend/.classpath
+garaaz-app-backend/.c9/
+garaaz-app-backend/*.launch
+garaaz-app-backend/.settings/
+garaaz-app-backend/*.sublime-workspace
+
+# IDE - VSCode
+garaaz-app-backend/.vscode/*
+garaaz-app-backend/!.vscode/settings.json
+garaaz-app-backend/!.vscode/tasks.json
+garaaz-app-backend/!.vscode/launch.json
+garaaz-app-backend/!.vscode/extensions.json
+
+# Logs
+logs
+garaaz-app-frontend/*.log
+garaaz-app-frontend/npm-debug.log*
+garaaz-app-frontend/yarn-debug.log*
+garaaz-app-frontend/yarn-error.log*
+garaaz-app-frontend/pnpm-debug.log*
+garaaz-app-frontend/lerna-debug.log*
+
+garaaz-app-frontend/node_modules
+garaaz-app-frontend/dist
+garaaz-app-frontend/dist-ssr
+garaaz-app-frontend/*.local
+
+# Editor directories and files
+garaaz-app-frontend/.vscode/*
+garaaz-app-frontend/!.vscode/extensions.json
+garaaz-app-frontend/.idea
+garaaz-app-frontend/.DS_Store
+garaaz-app-frontend/*.suo
+garaaz-app-frontend/*.ntvs*
+garaaz-app-frontend/*.njsproj
+garaaz-app-frontend/*.sln
+garaaz-app-frontend/*.sw?

@@ -1,29 +1,28 @@
 import {
-  TableContainer,
-  Table,
-  TableCaption,
   Select,
-  Tr,
-  Th,
   Td,
-  Thead,
-  Tbody,
-  Tfoot,
-  Grid,
-  GridItem,
   Input,
-  HStack,
   Button,
-  ButtonGroup,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper,
+  NumberDecrementStepper,  
 } from "@chakra-ui/react";
+import {useToast} from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-function handleDelete() {}
 function OrderComponent(props: any) {
+  const toast = useToast();
+
+  function showError(message:string){
+      toast({
+        title: message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+  }
+
   const array = [
     "index",
     "date",
@@ -47,6 +46,7 @@ function OrderComponent(props: any) {
               month: "long",
               day: "numeric",
             };
+            //@ts-ignore
             const d = dt.toLocaleDateString("en-US", options);
             console.log(d);
             return (
@@ -61,21 +61,21 @@ function OrderComponent(props: any) {
                 {props.element.index + 1}
               </Td>
             );
-          }
-          else if (key == "action") {
-            return(
-            <Td key={props.element.index + "db"} textAlign="center">
-              <Button
-                onClick={() => props.deleteRowHandler(props.element.index)}
-                leftIcon={<DeleteIcon />}
-                colorScheme="red"
-                size="sm"
-                variant="solid"
-              >
-                Delete
-              </Button>
-            </Td>)
-            }else {
+          } else if (key == "action") {
+            return (
+              <Td key={props.element.index + "db"} textAlign="center">
+                <Button
+                  onClick={() => props.deleteRowHandler(props.element.index)}
+                  leftIcon={<DeleteIcon />}
+                  colorScheme="red"
+                  size="sm"
+                  variant="solid"
+                >
+                  Delete
+                </Button>
+              </Td>
+            );
+          } else {
             return (
               <Td key={props.element.index} textAlign="center">
                 {props.element[`${key}`]}
@@ -89,33 +89,36 @@ function OrderComponent(props: any) {
                 {props.element.index + 1}
               </Td>
             );
+          } else if (key == "action") {
+            return (
+              <Td key={props.element.index + "db"} textAlign="center">
+                <Button
+                  onClick={() => props.deleteRowHandler(props.element.index)}
+                  leftIcon={<DeleteIcon />}
+                  colorScheme="red"
+                  size="sm"
+                  variant="solid"
+                >
+                  Delete
+                </Button>
+              </Td>
+            );
           }
-          else if (key == "action") {
-            return(
-            <Td key={props.element.index + "db"} textAlign="center">
-              <Button
-                onClick={() => props.deleteRowHandler(props.element.index)}
-                leftIcon={<DeleteIcon />}
-                colorScheme="red"
-                size="sm"
-                variant="solid"
-              >
-                Delete
-              </Button>
-            </Td>)
-            }
           switch (key) {
             case "transaction_type":
               return (
                 <Td key={props.element.index + "txn"}>
                   <Select
+                    isInvalid={!(props.data.transaction_type=="Facilitation" || props.data.transaction_type=="Trading")}
+                    isRequired={true}
                     placeholder="Select option"
                     value={props.data.transaction_type}
                     onChange={(e) =>
                       props.setField(
                         "transaction_type",
                         props.element.index,
-                        e.target.value
+                        e.target.value,
+                        showError
                       )
                     }
                   >
@@ -129,6 +132,7 @@ function OrderComponent(props: any) {
               return (
                 <Td key={props.element.index + "brand"}>
                   <Input
+                    isInvalid={props.data.brand.trim==""}
                     textAlign="center"
                     width="20vw"
                     variant="outline"
@@ -138,7 +142,8 @@ function OrderComponent(props: any) {
                       props.setField(
                         "brand",
                         props.element.index,
-                        e.target.value
+                        e.target.value,
+                        showError
                       )
                     }
                   />
@@ -155,7 +160,7 @@ function OrderComponent(props: any) {
                     max={13}
                     value={props.data.total_Orders}
                     onChange={(e) =>
-                      props.setField("total_Orders", props.element.index, e)
+                      props.setField("total_Orders", props.element.index, e,showError)
                     }
                   >
                     <NumberInputField />
@@ -180,7 +185,8 @@ function OrderComponent(props: any) {
                       props.setField(
                         "total_Order_Value",
                         props.element.index,
-                        e
+                        e,
+                        showError
                       )
                     }
                   >
@@ -206,7 +212,8 @@ function OrderComponent(props: any) {
                       props.setField(
                         "grossMarginPercentage",
                         props.element.index,
-                        e
+                        e,
+                        showError
                       )
                     }
                   >

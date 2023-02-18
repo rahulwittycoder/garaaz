@@ -7,54 +7,65 @@ import {
   Thead,
   Tbody,
   Tfoot,
-  HStack,
   ChakraProvider,
-  Button,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
+  useToast,
 } from "@chakra-ui/react";
-import { AddIcon, CheckIcon } from "@chakra-ui/icons";
 import OrderComponent from "../components/order-component";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import ButtonSection from "../components/ButtonSection";
+import { validateStates } from "../utils/validation.utils";
 const url = "http://localhost:3000/spares";
-const onAddBtnClick = () => {};
 const create = true;
 
 function PlaceOrder() {
-  const [success, setSuccess] = useState(false);
   const [txn, setTxn] = useState<any>([""]);
   const [brand, setBrand] = useState<any>([""]);
   const [qty, setQty] = useState<any>([""]);
   const [total, setTotal] = useState<any>([""]);
   const [gm, setGm] = useState<any>([""]);
   const [data, setData] = useState([{ index: 0 }]);
-
   const url = "http://localhost:3000/spares/add";
+  const [valid, setValid] = useState<any>({
+    0: {
+      transaction_type: true,
+      brand: true,
+      total_Orders: true,
+      total_Order_Value: true,
+      grossMarginPercentage: true,
+    },
+  });
 
-  function showSuccess()
-  {
-    return (<Alert status="success">
-    <AlertIcon />
-    Data uploaded to the server. Fire on!
-  </Alert>);
-  }
-  function addRowHandler() {
-    console.log("data.length " + data.length);
+  function addRowHandler(callbackFunction: any) {
+    if (Object.keys(valid).length) {
+      callbackFunction();
+      return;
+    }
     setData([...data, { index: data.length }]);
     setTxn([...txn, ""]);
     setBrand([...brand, ""]);
     setQty([...qty, ""]);
     setTotal([...total, ""]);
     setGm([...gm, ""]);
-    console.log(data);
   }
 
-  function submitHandler() {
+  function resetStates() {
+    setData([{ index: 0 }]),
+      setBrand([""]),
+      setGm([""]),
+      setTxn([""]),
+      setQty([""]),
+      setTotal([""]);
+  }
+
+  function submitHandler(callbackFunction: any) {
+    if (Object.keys(valid).length) {
+      callbackFunction();
+      return;
+    }
     const payload = data.map((item, index) => {
       return {
+        date: new Date(),
         brand: brand[index],
         transaction_type: txn[index],
         total_Orders: qty[index],
@@ -64,25 +75,31 @@ function PlaceOrder() {
     });
     axios
       .post(url, payload)
-      .then(() => (
-        <Alert status="success">
-          <AlertIcon />
-          Data uploaded to the server. Fire on!
-        </Alert>
-      ))
-      .catch();
+      .then(() => {
+        callbackFunction(true, "onSubmit");
+        resetStates();
+      })
+      .catch(() => callbackFunction(false, "onSubmit"));
   }
 
-  function setField(key: any, index: number, value: any) {
+  function setField(
+    key: any,
+    index: number,
+    value: any,
+    callbackFunction: any
+  ) {
+    let flag = "";
     switch (key) {
       case "brand":
-        console.log("At line 81");
         const temp = [...brand];
         setBrand(
           temp.map((k: any, i: any) => {
             return i == index ? value : k;
           })
         );
+        if (value.trim().length === 0) {
+          flag = "Brand Name Cannot be Empty!";
+        }
         break;
       case "transaction_type":
         setTxn(
@@ -90,6 +107,9 @@ function PlaceOrder() {
             return i == index ? value : k;
           })
         );
+        if (value == "Select option") {
+          flag = "Please select transaction type!";
+        }
         break;
       case "total_Orders":
         setQty(
@@ -97,6 +117,9 @@ function PlaceOrder() {
             return i == index ? value : k;
           })
         );
+        if (value <= 0 || value > 13) {
+          flag = "Total Orders cannot exceed 13!";
+        }
         break;
       case "total_Order_Value":
         setTotal(
@@ -104,6 +127,9 @@ function PlaceOrder() {
             return i == index ? value : k;
           })
         );
+        if (value <= 0 || value > 12000) {
+          flag = "Total Order Value cannot exceed 12000 INR";
+        }
         break;
       case "grossMarginPercentage":
         setGm(
@@ -111,25 +137,38 @@ function PlaceOrder() {
             return i == index ? value : k;
           })
         );
+        if (value > 4 || value < 1) {
+          flag = "Gross Margin % should lie between 1-4";
+        }
         break;
     }
-    console.log(
-      brand.map((k: any, i: any) => {
-        return i == index ? value : k;
-      }),
-      "Hello World",
-      key
-    );
+    validateStates({
+      flag,
+      setValid,
+      valid,
+      index,
+      key,
+      callbackFunction,
+    });
   }
 
   const deleteRowHandler = (index: any) => {
-    console.log(index);
     setData(
       data.filter((f) => {
         return f.index !== index;
       })
     );
-    console.log(data);
+    setBrand((v: any) => v.filter((f: any, i: number) => i !== index));
+
+    setTxn((v: any) => v.filter((f: any, i: number) => i !== index));
+
+    setGm((v: any) => v.filter((f: any, i: number) => i !== index));
+
+    setQty((v: any) => v.filter((f: any, i: number) => i !== index));
+
+    setBrand((v: any) => v.filter((f: any, i: number) => i !== index));
+
+    setTotal((v: any) => v.filter((f: any, i: number) => i !== index));
   };
 
   return (
@@ -161,8 +200,6 @@ function PlaceOrder() {
                     <OrderComponent
                       key={index + 1}
                       deleteRowHandler={deleteRowHandler}
-                      textAlign="center"
-                      border="solid"
                       element={{ ...item, create }}
                       data={{
                         brand: brand[index],
@@ -179,24 +216,10 @@ function PlaceOrder() {
             </Tbody>
             <Tfoot></Tfoot>
           </Table>
-          <HStack spacing="2.5vw" justifyContent="center" textAlign="center">
-            <Button
-              onClick={addRowHandler}
-              leftIcon={<AddIcon />}
-              colorScheme="blue"
-              variant="solid"
-            >
-              Add row
-            </Button>
-            <Button
-              onClick={submitHandler}
-              leftIcon={<CheckIcon />}
-              colorScheme="green"
-              variant="solid"
-            >
-              Submit
-            </Button>
-          </HStack>
+          <ButtonSection
+            addRowHandler={addRowHandler}
+            submitHandler={submitHandler}
+          />
         </TableContainer>
       </ChakraProvider>
     </>
