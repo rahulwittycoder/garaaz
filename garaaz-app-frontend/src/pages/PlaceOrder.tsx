@@ -77,6 +77,15 @@ function PlaceOrder() {
       .then(() => {
         callbackFunction(true, "onSubmit");
         resetStates();
+        setValid({
+          0: {
+            transaction_type: true,
+            brand: true,
+            total_Orders: true,
+            total_Order_Value: true,
+            grossMarginPercentage: true,
+          },
+        })
       })
       .catch(() => callbackFunction(false, "onSubmit"));
   }
