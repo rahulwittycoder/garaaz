@@ -160,6 +160,10 @@ function PlaceOrder() {
   }
 
   const deleteRowHandler = (index: any) => {
+    if(data.length==1)
+    {
+      return ;
+    }
     setData(
       data.filter((f) => {
         return f.index !== index;
